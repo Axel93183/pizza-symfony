@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+
+Hello PizzaController!
+
+{% endblock %}
+
+{% block stylesheets %}
+  
+    <style>
+        /* pour center l'ensemble de la page */
+        .center {
+        width: 300px;
+        border-collapse: collapse;
+        }
+
+        /* pour ajouter une bordure à chaque pizza */
+        .pizza-list {
+        border: 3px solid rgb(97, 97, 207);;
+        border-radius: 25%;
+        text-align: left;
+        padding: 8px;
+        }
+    </style>
+  
+        
+{% endblock %}
+
+{% block body %}
+
+    <h1 class="center">Menu</h1>
+
+    {% for pizza in list %}
+        <div class="center">
+            <div class="pizza-list">
+                <h2>Pizza {{ pizza.name }}</h2>
+                <h3>Prix {{ pizza.price }}</h3>
+            </div>
+        </div>
+
+    {% endfor %}
+
+{% endblock %}
