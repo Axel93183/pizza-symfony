@@ -2,7 +2,7 @@
 
 {% block title %}
 
-Hello PizzaController!
+Liste Pizzas
 
 {% endblock %}
 
@@ -18,9 +18,10 @@ Hello PizzaController!
         /* pour ajouter une bordure à chaque pizza */
         .pizza-list {
         border: 3px solid rgb(97, 97, 207);;
-        border-radius: 25%;
+        border-radius: 15%;
         text-align: left;
         padding: 8px;
+        height: 200px;
         }
     </style>
   
@@ -35,7 +36,14 @@ Hello PizzaController!
         <div class="center">
             <div class="pizza-list">
                 <h2>Pizza {{ pizza.name }}</h2>
-                <h3>Prix {{ pizza.price }}</h3>
+                <h3>Prix: {{ pizza.price }}</h3>
+                <h3>Composition: {{ pizza.description}}</h3>
+
+                {# redirige vers le chemin en incluant l'id dans la route #}
+                <a href=" {{  path('app_pizza_update', {'id': pizza.id}) }}">Modifier</a>
+
+                <a href=" {{  path('app_pizza_remove', {'id': pizza.id}) }}">Supprimer</a>
+              
             </div>
         </div>
 
