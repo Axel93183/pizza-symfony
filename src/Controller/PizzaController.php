@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Pizza;
+use App\Form\PizzaType;
 use App\Repository\PizzaRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -131,5 +132,87 @@ class PizzaController extends AbstractController
 
         //redirection vers la liste des pizzas
         return $this->redirectToRoute('app_pizza_list');
+    }
+
+    #[Route('/pizza/create', name: 'app_pizza_create')]
+    public function create (PizzaRepository $repository, Request $request):Response
+    {
+        //création de l'objet PHP
+        $pizza= new Pizza();
+
+        //création du formulaire
+        $form= $this->createForm(PizzaType::class , $pizza);
+
+        //remplissage du formulaire et de l'objet php avec la requete
+        $form->handleRequest($request); 
+
+        //si le formulaire est envoyé et les données sont valides
+        if($form->isSubmitted() && $form->isValid()){
+
+            //recuperation de l'objet validé et remplie pas le formulaire
+            $validPizza = $form->getData();
+
+            //enregistrer les donnée dans la bd
+            $repository->save($validPizza, true);
+
+            //redirection vers la liste des pizzas
+            return $this->redirectToRoute('app_pizza_list');
+        }
+
+        //récuperation de la view du formulaire
+        $formView= $form->createView();
+
+        //affichage dans le template
+        return $this->render('pizza/createForm.html.twig' , [
+            'form' => $formView,
+        ]);
+
+
+        /* ou bien ecrire les deux instrcution dans une seule:
+
+         return $this->render('pizza/createForm.html.twig' ,[
+            'form' => $form->createView(),
+        ]); 
+
+        */
+    }
+
+    
+    #[Route('/pizza/updateForm/{id}', name: 'app_pizza_updateForm')]
+    public function updateForm(int $id, PizzaRepository $repository, Request $request):Response {
+
+        //Recupere les données de la pizza avec son Id
+        $pizza = $repository->find($id);
+
+//------------------Puis ensuite même partie que la création------------------------//
+
+        //création du formulaire avec $pizza en parametre ( cela pre-rempli le formulaire de modification avec la pizza choisie a partir de son id de la ligne:185 
+        
+        $form= $this->createForm(PizzaType::class , $pizza);
+
+        //remplissage du formulaire et de l'objet php avec la requete
+        $form->handleRequest($request); 
+
+        //si le formulaire est envoyé et les données sont valides
+        if($form->isSubmitted() && $form->isValid()){
+
+            //recuperation de l'objet validé et remplie pas le formulaire
+            $validPizza = $form->getData();
+
+            //enregistrer les donnée dans la bd
+            $repository->save($validPizza, true);
+
+            //redirection vers la liste des pizzas
+            return $this->redirectToRoute('app_pizza_list');
+        }
+
+         //récuperation de la view du formulaire
+         $formView= $form->createView();
+
+         //affichage dans le template
+         return $this->render('pizza/updateForm.html.twig' , [
+             'form' => $formView,
+        ]);
+ 
     }
 }
